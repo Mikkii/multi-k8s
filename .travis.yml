@@ -1,0 +1,23 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t mikkii/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true mikkii/react-test npm test
+
+after_success:
+    - docker build -t mikkii/multi-client ./client
+    - docker build -t mikkii/multi-nginx ./nginx
+    - docker build -t mikkii/multi-server ./server
+    - docker build -t mikkii/multi-worker ./worker
+    # Log in ti the docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Take those images and push them to DOckerHub
+    - docker push mikkii/multi-client
+    - docker push mikkii/multi-nginx
+    - docker push mikkii/multi-server
+    - docker push mikkii/multi-worker
+    
