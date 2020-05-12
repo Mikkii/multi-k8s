@@ -10,7 +10,7 @@ docker push mikkii/multi-client:$SHA
 docker push mikkii/multi-server:$SHA
 docker push mikkii/multi-worker:$SHA
 
-kubectl apply ./k8s
+kubectl apply -f k8s
 kubectl set image deployments/server-deployment server=mikkii/multi-server:$SHA
 kubectl set image deployments/client-deployment client=mikkii/multi-client:$SHA
 kubectl set image deployments/worker-deployment worker=mikkii/multi-worker:$SHA
